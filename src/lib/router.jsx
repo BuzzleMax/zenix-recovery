@@ -20,6 +20,8 @@ const PageLoader = () => (
   </div>
 )
 
+console.log('Router: Creating hash router...')
+
 export const router = createHashRouter([
   {
     path: '/login',
