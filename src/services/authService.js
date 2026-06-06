@@ -2,6 +2,10 @@ import { supabase } from '@lib/supabase'
 
 export const authService = {
   async signIn(email, password) {
+    if (!supabase) {
+      throw new Error('Supabase not configured')
+    }
+    
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -25,6 +29,10 @@ export const authService = {
   },
 
   async signUp(email, password, username) {
+    if (!supabase) {
+      throw new Error('Supabase not configured')
+    }
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -72,6 +80,10 @@ export const authService = {
   },
 
   async signOut() {
+    if (!supabase) {
+      throw new Error('Supabase not configured')
+    }
+    
     const { error } = await supabase.auth.signOut()
 
     if (error) {
@@ -80,6 +92,10 @@ export const authService = {
   },
 
   async resetPassword(email) {
+    if (!supabase) {
+      throw new Error('Supabase not configured')
+    }
+    
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     })
@@ -90,6 +106,10 @@ export const authService = {
   },
 
   async updatePassword(newPassword) {
+    if (!supabase) {
+      throw new Error('Supabase not configured')
+    }
+    
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     })
@@ -100,6 +120,10 @@ export const authService = {
   },
 
   async getSession() {
+    if (!supabase) {
+      throw new Error('Supabase not configured')
+    }
+    
     const { data: { session }, error } = await supabase.auth.getSession()
 
     if (error) {

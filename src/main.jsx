@@ -8,6 +8,15 @@ import './styles/index.css'
 import { router } from './lib/router'
 import Toaster from '@components/ui/Toaster'
 
+// Add startup error logging
+window.addEventListener('error', (event) => {
+  console.error('Global error:', event.error)
+})
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason)
+})
+
 // Register service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -21,6 +30,8 @@ if ('serviceWorker' in navigator) {
     )
   })
 }
+
+console.log('Starting Zenix Recovery application...')
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -11,18 +11,30 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    console.log('AuthContext: Initializing auth...')
+    
+    // Check if Supabase is available
+    if (!supabase) {
+      console.error('AuthContext: Supabase client not available')
+      setError('Supabase not configured')
+      setLoading(false)
+      return
+    }
+
     // Check for existing session on mount
     const initializeAuth = async () => {
       try {
+        console.log('AuthContext: Getting session...')
         const { data: { session }, error } = await supabase.auth.getSession()
         
         if (error) throw error
         
+        console.log('AuthContext: Session retrieved:', !!session)
         setSession(session)
         setUser(session?.user ?? null)
       } catch (err) {
+        console.error('AuthContext: Error initializing auth:', err)
         setError(err.message)
-        console.error('Error initializing auth:', err)
       } finally {
         setLoading(false)
       }
@@ -33,6 +45,7 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('AuthContext: Auth state changed:', event, !!session)
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -54,6 +67,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true, data }
     } catch (err) {
+      console.error('AuthContext: Sign in error:', err)
       setError(err.message)
       return { success: false, error: err.message }
     } finally {
@@ -73,6 +87,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true, data }
     } catch (err) {
+      console.error('AuthContext: Sign up error:', err)
       setError(err.message)
       return { success: false, error: err.message }
     } finally {
@@ -92,6 +107,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true }
     } catch (err) {
+      console.error('AuthContext: Sign out error:', err)
       setError(err.message)
       return { success: false, error: err.message }
     } finally {

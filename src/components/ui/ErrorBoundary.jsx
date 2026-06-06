@@ -4,7 +4,7 @@ import { AlertTriangle, RefreshCw } from 'lucide-react'
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props)
-    this.state = { hasError: false, error: null }
+    this.state = { hasError: false, error: null, errorInfo: null }
   }
 
   static getDerivedStateFromError(error) {
@@ -12,11 +12,13 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
+    console.error('ErrorBoundary caught an error:', error)
+    console.error('Error Info:', errorInfo)
+    this.setState({ errorInfo })
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, error: null })
+    this.setState({ hasError: false, error: null, errorInfo: null })
   }
 
   render() {
@@ -31,6 +33,14 @@ class ErrorBoundary extends Component {
             <p className="text-text/60 mb-6">
               {this.state.error?.message || 'An unexpected error occurred'}
             </p>
+            <details className="text-left mb-6 bg-background/50 rounded-lg p-4">
+              <summary className="cursor-pointer text-text/80 mb-2">Error Details</summary>
+              <pre className="text-xs text-text/60 overflow-auto">
+                {this.state.error?.toString()}
+                {'\n'}
+                {this.state.errorInfo?.componentStack}
+              </pre>
+            </details>
             <button
               onClick={this.handleReset}
               className="bg-emerald text-background font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center space-x-2 mx-auto"
