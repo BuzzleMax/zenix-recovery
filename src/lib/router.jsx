@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import { AuthProvider } from '@context/AuthContext'
 import DashboardLayout from '@components/layout/DashboardLayout'
@@ -20,7 +20,7 @@ const PageLoader = () => (
   </div>
 )
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/login',
     element: (
